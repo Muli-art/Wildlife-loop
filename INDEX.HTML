@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>East African Forest Soundscape</title>
+  <style>
+    body {
+      background: #0b1712;
+      color: #e2f3e8;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    .card {
+      background: #13261d;
+      border: 1px solid #254a37;
+      padding: 32px 24px;
+      border-radius: 24px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+      max-width: 360px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 22px;
+      margin-bottom: 8px;
+      color: #71d89b;
+    }
+    p {
+      font-size: 14px;
+      color: #a3c9b1;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .btn {
+      background: #2e7d32;
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 16px rgba(46, 125, 50, 0.4);
+      transition: transform 0.1s ease;
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    .status {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #81c784;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>🌿 Wild Forest Ambience</h1>
+    <p>Non-stop loop: Birds • Colobus • Monkeys • Baboons • Elephants • Tribal Beat</p>
+    <button class="btn" id="playBtn" onclick="toggleAudio()">Tap to Start Loop</button>
+    <div id="status" class="status">Ready to scan and stream</div>
+  </div>
+
+  <script>
+    let isPlaying = false;
+    let audioCtx = null;
+    let beatInterval = null;
+    let wildlifeInterval = null;
+
+    function toggleAudio() {
+      if (isPlaying) {
+        stopSoundscape();
+      } else {
+        startSoundscape();
+      }
+    }
+
+    function startSoundscape() {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      isPlaying = true;
+      document.getElementById('playBtn').innerText = "⏸ Pause Loop";
+      document.getElementById('status').innerText = "🔊 Playing non-stop forest soundscape";
+
+      // 1. Rhythm Beat Layer (85 BPM)
+      beatInterval = setInterval(() => {
+        if (!isPlaying) return;
+        
+        // Low Drum Kick
+        let kick = audioCtx.createOscillator();
+        let kickGain = audioCtx.createGain();
+        kick.frequency.setValueAtTime(110, audioCtx.currentTime);
+        kick.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+        kickGain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        kickGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+        kick.connect(kickGain);
+        kickGain.connect(audioCtx.destination);
+        kick.start();
+        kick.stop(audioCtx.currentTime + 0.35);
+      }, 700);
+
+      // 2. Continuous Wildlife Sequence (Colobus, Elephants, Baboons, Birds)
+      triggerAnimalCalls();
+      wildlifeInterval = setInterval(triggerAnimalCalls, 12000); // Loops calls smoothly
+    }
+
+    function triggerAnimalCalls() {
+      if (!isPlaying) return;
+
+      // Colobus Monkey Deep Roar Call
+      setTimeout(() => playColobusRoar(), 1000);
+      
+      // Birds & Primate Chatter
+      setTimeout(() => playBirdChatter(), 3500);
+
+      // Baboon Troop Barks
+      setTimeout(() => playBaboonBark(), 6500);
+
+      // Elephant Trumpet Call
+      setTimeout(() => playElephantTrumpet(), 9500);
+    }
+
+    function playColobusRoar() {
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+      osc.frequency.linearRampToValueAtTime(80, audioCtx.currentTime + 1.2);
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 1.2);
+    }
+
+    function playElephantTrumpet() {
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.4);
+      osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 1.5);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 1.5);
+    }
+
+    function playBaboonBark() {
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.3);
+    }
+
+    function playBirdChatter() {
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1800, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(3200, audioCtx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.15);
+    }
+
+    function stopSoundscape() {
+      isPlaying = false;
+      clearInterval(beatInterval);
+      clearInterval(wildlifeInterval);
+      if (audioCtx) audioCtx.close();
+      document.getElementById('playBtn').innerText = "▶ Play Non-Stop Loop";
+      document.getElementById('status').innerText = "Loop paused";
+    }
+  </script>
+</body>
+</html>
+  
